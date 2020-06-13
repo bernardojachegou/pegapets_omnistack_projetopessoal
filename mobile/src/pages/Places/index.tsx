@@ -1,9 +1,9 @@
 import React from 'react';
 import Constants from 'expo-constants';
-import { Feather as Icon } from '@expo/vector-icons'
+import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import MapView from 'react-native-maps';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
 
 const Places = () => {
@@ -11,6 +11,10 @@ const Places = () => {
 
     function handleNavigateBack() {
         navigation.goBack();
+    }
+
+    function handleNavigateToDetail() {
+        navigation.navigate('Detail');
     }
 
     return (
@@ -24,17 +28,37 @@ const Places = () => {
                 <Text style={styles.description}>Encontre no mapa um local de adoção.</Text>
 
                 <View style={styles.mapContainer}>
-                    <MapView style={styles.map} />
+                    <MapView style={styles.map} initialRegion={{
+                        latitude: -27.2092052,
+                        longitude: -49.6401092,
+                        latitudeDelta: 0.014,
+                        longitudeDelta: 0.014,
+                    }}
+                    >
+                        <Marker
+                            style={styles.mapMarker}
+                            onPress={handleNavigateToDetail}
+                            coordinate={{
+                                latitude: -27.2092052,
+                                longitude: -49.6401092
+                            }}
+                        >
+                            <View style={styles.mapMarkerContainer}>
+                                <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1327&q=80' }} />
+                                <Text style={styles.mapMarkerTitle}>Pet Anjos</Text>
+                            </View>
+                        </Marker>
+                    </MapView>
                 </View>
             </View>
             <View style={styles.itemsContainer}>
-                <ScrollView 
-                    horizontal 
+                <ScrollView
+                    horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 20}}
+                    contentContainerStyle={{ paddingHorizontal: 20 }}
                 >
                     <TouchableOpacity style={styles.item} onPress={() => { }}>
-                    <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/2930/2930627.svg" />
+                        <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/2930/2930627.svg" />
                         <Text style={styles.itemTitle}>Gatos</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.item} onPress={() => { }}>
@@ -44,7 +68,7 @@ const Places = () => {
                     <TouchableOpacity style={styles.item} onPress={() => { }}>
                         <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/1947/1947884.svg" />
                         <Text style={styles.itemTitle}>Outros</Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
         </>
@@ -92,7 +116,7 @@ const styles = StyleSheet.create({
     mapMarkerContainer: {
         width: 90,
         height: 70,
-        backgroundColor: '#34CB79',
+        backgroundColor: '#6A4671',
         flexDirection: 'column',
         borderRadius: 8,
         overflow: 'hidden',

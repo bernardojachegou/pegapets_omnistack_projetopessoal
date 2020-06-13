@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 5800,
-  "expoServerNgrokUrl": "https://k7-tdr.anonymous.mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.k7-tdr.anonymous.mobile.exp.direct",
-  "ngrokPid": 11116,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }

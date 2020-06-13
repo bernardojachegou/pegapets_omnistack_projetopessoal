@@ -1,0 +1,216 @@
+#page-create-place {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+#page-create-place header {
+  margin: 24px 0 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#page-create-place header a {
+  color: var(--title-color);
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+#page-create-place header a:hover {
+  text-decoration: underline;
+}
+
+#page-create-place header a svg {
+  margin-right: 12px;
+  color: var(--title-color);
+  width: 24px;
+  height: 24px;
+}
+
+#page-create-place form {
+  background-color: white;
+  margin: 20px auto;
+  padding: 64px;
+  border-radius: 8px;
+  max-width: 730px;
+  display: flex;
+  flex-direction: column;
+}
+
+#page-create-place form h1 {
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#page-create-place form fieldset {
+  margin-top: 64px;
+  min-inline-size: auto;
+  border: 0;
+}
+
+#page-create-place form legend {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+#page-create-place form legend h2 {
+  font-size: 24px;
+}
+
+#page-create-place form legend span {
+  font-size: 14px;
+  font-weight: normal;
+  color: #a0a0b2;
+}
+
+#page-create-place form .field-group {
+  flex: 1;
+  display: flex;
+}
+
+#page-create-place form .field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+#page-create-place form .field input[type="text"], #page-create-place form .field input[type="email"], #page-create-place form .field input[type="number"] {
+  flex: 1;
+  background-color: #f0f0e0;
+  border-radius: 8px;
+  border: 0;
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+#page-create-place form .field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  flex: 1;
+  background-color: #f0f0e0;
+  border-radius: 8px;
+  border: 0;
+  padding: 16px 24px;
+  font-size: 16px;
+  color: #6c6c80;
+}
+
+#page-create-place form .field input::placeholder {
+  color: #a0a0b2;
+}
+
+#page-create-place form .field label {
+  font-size: 14px;
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+
+#page-create-place form .field :disabled {
+  cursor: not-allowed;
+}
+
+#page-create-place form .field-group .field+.field {
+  margin-left: 24px;
+}
+
+#page-create-place form .field-group input+input {
+  margin-left: 24px;
+}
+
+#page-create-place form .field-check {
+  flex-direction: row;
+  align-items: center;
+}
+
+#page-create-place form .field-check input[type="checkbox"] {
+  background-color: #f0f0e0;
+}
+
+#page-create-place form .field-check label {
+  margin: 0 0 0 8px;
+}
+
+#page-create-place form .leaflet-container {
+  width: 100%;
+  height: 350px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+#page-create-place form button {
+  width: 100%;
+  height: 56px;
+  background: var(--title-color);
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  border: 0;
+  align-self: flex-end;
+  margin-top: 40px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+#page-create-place form button:hover {
+  background: var(--primary-color);
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  list-style: none;
+}
+
+.items-grid li {
+  background-color: #f0f0e0;
+  border: 2px solid #f5f5f5;
+  height: 180px;
+  border-radius: 8px;
+  padding: 32px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.items-grid li img {
+  width: 100px;
+  height: 100px;
+}
+
+.items-grid li span {
+  flex: 1;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  color: var(--title-color);
+}
+
+.items-grid li.selected {
+  border: 2px solid var(--primary-color);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  #page-create-place .field-group {
+      flex-direction: column;
+  }
+
+  #page-create-place .field-group .field + .field {
+      margin-left:0;
+  }
+}

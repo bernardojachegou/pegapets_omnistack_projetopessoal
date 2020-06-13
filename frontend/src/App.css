@@ -1,0 +1,31 @@
+:root {
+    --primary-color: #6A4671;
+    --title-color: #3F3B51;
+    --text-color: #060609;
+}
+
+.logo {
+    height: 82px;
+    width: 185px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f5e8df;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text-color);
+}
+
+body, input, button {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--title-color);
+    font-family: Ubuntu;
+}

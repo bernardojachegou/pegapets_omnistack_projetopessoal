@@ -1,20 +1,101 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
+import * as Location from 'expo-location';
+import api from '../../services/api';
+
+interface Pet {
+    id: number;
+    title: string;
+    image_url: string;
+}
+
+interface Place {
+    id: number;
+    name: string;
+    image: string;
+    latitude: number;
+    longitude: number;
+}
+
+interface Params {
+    uf: string;
+    city: string;
+}
 
 const Places = () => {
+    const [pets, setPets] = useState<Pet[]>([]);
+    const [places, setPlaces] = useState<Place[]>([]);
+    const [selectedPets, setSelectedPets] = useState<number[]>([]);
+
+    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+
     const navigation = useNavigation();
+    const route = useRoute();
+
+    const routeParams = route.params as Params;
+
+    useEffect(() => {
+        async function loadPosition() {
+            const { status } = await Location.requestPermissionsAsync();
+
+            if (status !== 'granted') {
+                Alert.alert('Ooops...', 'Precisamos de sua permissão para obter a localização');
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync();
+
+            const { latitude, longitude } = location.coords;
+
+            setInitialPosition([
+                latitude,
+                longitude
+            ]);
+        }
+        loadPosition();
+    }, []);
+
+    useEffect(() => {
+        api.get('pets').then(response => {
+            setPets(response.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        api.get('places', {
+            params: {
+                city: routeParams.city,
+                uf: routeParams.uf,
+                pets: selectedPets
+            }
+        }).then(response => {
+            setPlaces(response.data);
+        })
+    }, [selectedPets]);
 
     function handleNavigateBack() {
         navigation.goBack();
     }
 
-    function handleNavigateToDetail() {
-        navigation.navigate('Detail');
+    function handleNavigateToDetail(id: number) {
+        navigation.navigate('Detail',  { place_id: id });
+    }
+
+    function handleSelectedPet(id: number) {
+        const alreadySelected = selectedPets.findIndex(pet => pet === id);
+
+        if (alreadySelected >= 0) {
+            const filteredPets = selectedPets.filter(pet => pet !== id);
+            setSelectedPets(filteredPets);
+        } else {
+            setSelectedPets([...selectedPets, id]);
+        }
+
     }
 
     return (
@@ -28,48 +109,54 @@ const Places = () => {
                 <Text style={styles.description}>Encontre no mapa um local de adoção.</Text>
 
                 <View style={styles.mapContainer}>
-                    <MapView style={styles.map} initialRegion={{
-                        latitude: -27.2092052,
-                        longitude: -49.6401092,
-                        latitudeDelta: 0.014,
-                        longitudeDelta: 0.014,
-                    }}
-                    >
-                        <Marker
-                            style={styles.mapMarker}
-                            onPress={handleNavigateToDetail}
-                            coordinate={{
-                                latitude: -27.2092052,
-                                longitude: -49.6401092
+                    {initialPosition[0] !== 0 && (
+                        <MapView
+                            style={styles.map}
+
+                            initialRegion={{
+                                latitude: initialPosition[0],
+                                longitude: initialPosition[1],
+                                latitudeDelta: 0.014,
+                                longitudeDelta: 0.014,
                             }}
                         >
-                            <View style={styles.mapMarkerContainer}>
-                                <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1327&q=80' }} />
-                                <Text style={styles.mapMarkerTitle}>Pet Anjos</Text>
-                            </View>
-                        </Marker>
-                    </MapView>
+                            {places.map(place => (
+                                <Marker
+                                    key={String(place.id)}
+                                    style={styles.mapMarker}
+                                    onPress={() => handleNavigateToDetail(place.id)}
+                                    coordinate={{
+                                        latitude: place.latitude,
+                                        longitude: place.longitude,
+                                    }}
+                                >
+                                    <View style={styles.mapMarkerContainer}>
+                                        <Image style={styles.mapMarkerImage} source={{ uri: place.image }} />
+                                        <Text style={styles.mapMarkerTitle}>{place.name}</Text>
+                                    </View>
+                                </Marker>
+                            ))}
+                        </MapView>
+                    )}
                 </View>
             </View>
             <View style={styles.itemsContainer}>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 20 }}
-                >
-                    <TouchableOpacity style={styles.item} onPress={() => { }}>
-                        <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/2930/2930627.svg" />
-                        <Text style={styles.itemTitle}>Gatos</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.item} onPress={() => { }}>
-                        <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/3021/3021356.svg" />
-                        <Text style={styles.itemTitle}>Cães</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.item} onPress={() => { }}>
-                        <SvgUri width={50} height={50} uri="https://image.flaticon.com/icons/svg/1947/1947884.svg" />
-                        <Text style={styles.itemTitle}>Outros</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                <View style={styles.itemsContainer}>
+                    {pets.map(pet => (
+                        <TouchableOpacity
+                            key={String(pet.id)}
+                            style={[
+                                styles.item,
+                                selectedPets.includes(pet.id) ? styles.selectedItem : {}
+                            ]}
+                            onPress={() => handleSelectedPet(pet.id)}
+                            activeOpacity={0.7}
+                        >
+                            <SvgUri width={50} height={50} uri={pet.image_url} />
+                            <Text style={styles.itemTitle}>{pet.title}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
         </>
     )
@@ -140,7 +227,9 @@ const styles = StyleSheet.create({
     itemsContainer: {
         flexDirection: 'row',
         marginTop: 16,
-        marginBottom: 32,
+        marginBottom: 16,
+        marginLeft: 'auto',
+        marginRight: 'auto'
     },
 
     item: {
@@ -161,7 +250,7 @@ const styles = StyleSheet.create({
     },
 
     selectedItem: {
-        borderColor: '#34CB79',
+        borderColor: '#6A4671',
         borderWidth: 2,
     },
 

@@ -1,39 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 
 const Home = () => {
+    const [uf, setUf] = useState('');
+    const [city, setCity] = useState('');
+
     const navitation = useNavigation();
 
     function handleNavigateToPlaces() {
-        navitation.navigate('Places');
+        navitation.navigate('Places', {
+            uf,
+            city
+        });
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.main}>
-                <Image source={require('../../assets/logo.jpg')} />
-                <Text style={styles.title}>Seu pet pode está próximo de você...</Text>
-                <Text style={styles.description}>Ajudamos pessoas a encontrarem o seu próximo animal de estimação</Text>
-            </View>
-
-            <View style={styles.footer}>
-                <RectButton style={styles.button} onPress={handleNavigateToPlaces}>
-                    <View style={styles.buttonIcon}>
-                        <Text>
-                            <Icon name="arrow-right" color="#FFF" size={24} />
-                        </Text>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={styles.container}>
+                <View style={styles.main}>
+                    <Image source={require('../../assets/logo.jpg')} />
+                    <View>
+                        <Text style={styles.title}>Seu pet pode está próximo de você...</Text>
+                        <Text style={styles.description}>Ajudamos pessoas a encontrarem o seu próximo animal de estimação</Text>
                     </View>
-                    <Text style={styles.buttonText}>
-                        Entrar
-                    </Text>
-                </RectButton>
-            </View>
+                </View>
 
-        </View>
+                <View style={styles.footer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite a UF"
+                        value={uf}
+                        maxLength={2}
+                        autoCapitalize="characters"
+                        autoCorrect={false}
+                        onChangeText={setUf}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite a cidade"
+                        value={city}
+                        autoCorrect={false}
+                        onChangeText={setCity}
+                    />
+
+                    <RectButton style={styles.button} onPress={handleNavigateToPlaces}>
+                        <View style={styles.buttonIcon}>
+                            <Text>
+                                <Icon name="arrow-right" color="#FFF" size={24} />
+                            </Text>
+                        </View>
+                        <Text style={styles.buttonText}>
+                            Entrar
+                    </Text>
+                    </RectButton>
+                </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -53,13 +79,13 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontFamily: "Ubuntu_700Bold",
         maxWidth: 260,
-        marginTop: 64,
+        marginTop: 8,
     },
 
     description: {
         color: "#060609",
         fontSize: 16,
-        marginTop: 16,
+        marginTop: 8,
         fontFamily: "Roboto_400Regular",
         maxWidth: 260,
         lineHeight: 24,

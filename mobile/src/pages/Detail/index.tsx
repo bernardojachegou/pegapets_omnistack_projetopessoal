@@ -13,6 +13,7 @@ interface Params {
 interface Data {
     place: {
         image: string;
+        image_url: string;
         name: string;
         email: string;
         whatsapp: string;
@@ -63,7 +64,7 @@ const Detail = () => {
                     <Icon name="arrow-left" size={24} color="#3F3B51" />
                 </TouchableOpacity>
 
-                <Image style={styles.pointImage} source={{ uri: data.place.image }} />
+                <Image style={styles.pointImage} source={{ uri: data.place.image_url }} />
                 <Text style={styles.pointName}>{data.place.name}</Text>
                 <Text style={styles.pointItems}>
                     {data.pets.map(pet => pet.title).join(', ')}

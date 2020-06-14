@@ -5,6 +5,7 @@ import { Map, TileLayer, Marker } from 'react-leaflet';
 import axios from 'axios';
 import { LeafletMouseEvent } from 'leaflet';
 import api from '../../services/api';
+import Dropzone from '../../components/Dropzone';
 
 import './styles.css';
 import logo from '../../assets/logo.png';
@@ -27,7 +28,7 @@ const CreatePlace = () => {
     const [pets, setPets] = useState<Pet[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
-    
+
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
 
     const [formData, setFormData] = useState({
@@ -40,12 +41,13 @@ const CreatePlace = () => {
     const [selectedCity, setSelectedCity] = useState('0');
     const [selectedPets, setSelectedPets] = useState<number[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+    const [selectedFile, setSelectedFile] = useState<File>();
 
     const history = useHistory();
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
-            const { latitude, longitude} = position.coords;
+            const { latitude, longitude } = position.coords;
 
             setInitialPosition([latitude, longitude]);
         })
@@ -60,7 +62,7 @@ const CreatePlace = () => {
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(response => {
             const ufInitials = response.data.map(uf => uf.sigla);
-            
+
             setUfs(ufInitials);
         });
     }, []);
@@ -70,12 +72,12 @@ const CreatePlace = () => {
             return;
         }
         axios
-        .get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
-        .then(response => {
-            const cityNames = response.data.map(city => city.nome);
+            .get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
+            .then(response => {
+                const cityNames = response.data.map(city => city.nome);
 
-            setCities(cityNames);
-        });
+                setCities(cityNames);
+            });
     }, [selectedUf]);
 
     function handleSelectedtUf(event: ChangeEvent<HTMLSelectElement>) {
@@ -97,8 +99,8 @@ const CreatePlace = () => {
         ])
     }
 
-    function handleInputChange(event: ChangeEvent<HTMLInputElement> ) {
-        const { name, value } = event.target; 
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+        const { name, value } = event.target;
 
         setFormData({ ...formData, [name]: value })
     }
@@ -110,30 +112,34 @@ const CreatePlace = () => {
             const filteredPets = selectedPets.filter(pet => pet !== id);
             setSelectedPets(filteredPets);
         } else {
-            setSelectedPets([ ...selectedPets, id ]);
+            setSelectedPets([...selectedPets, id]);
         }
 
-    }  
-    
+    }
+
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
 
-        const { name, email, whatsapp } =formData;
+        const { name, email, whatsapp } = formData;
         const uf = selectedUf;
         const city = selectedCity;
         const [latitude, longitude] = selectedPosition;
         const pets = selectedPets;
 
-        const data = {
-            name,
-            email, 
-            whatsapp,
-            uf, 
-            city,
-            latitude,
-            longitude,
-            pets
-        };
+        const data = new FormData();
+
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('uf', uf);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('pets', pets.join(','));
+
+        if (selectedFile) {
+            data.append('image', selectedFile)
+        }
 
         await api.post('places', data);
 
@@ -154,6 +160,8 @@ const CreatePlace = () => {
             </header>
             <form onSubmit={handleSubmit}>
                 <h1>Cadastrar local de adoção</h1>
+
+                <Dropzone onFileUploaded={setSelectedFile} />
 
                 <fieldset>
                     <legend>
@@ -214,11 +222,11 @@ const CreatePlace = () => {
                     <div className="field-group">
                         <div className="field">
                             <label htmlFor="uf">Estado (UF)</label>
-                            <select 
-                            name="uf" 
-                            id="uf" 
-                            value={selectedUf} 
-                            onChange={handleSelectedtUf}
+                            <select
+                                name="uf"
+                                id="uf"
+                                value={selectedUf}
+                                onChange={handleSelectedtUf}
                             >
                                 <option value="0">Selecione um estado</option>
                                 {ufs.map(uf => (
@@ -228,11 +236,11 @@ const CreatePlace = () => {
                         </div>
                         <div className="field">
                             <label htmlFor="city">Cidade</label>
-                            <select 
-                            name="city" 
-                            id="city"
-                            value={selectedCity}
-                            onChange={handleSelectedtCity}
+                            <select
+                                name="city"
+                                id="city"
+                                value={selectedCity}
+                                onChange={handleSelectedtCity}
                             >
                                 <option value="0">Selecione uma cidade</option>
                                 {cities.map(city => (
@@ -251,10 +259,10 @@ const CreatePlace = () => {
 
                     <ul className="items-grid">
                         {pets.map(pet => (
-                            <li 
-                            key={pet.id} 
-                            onClick={() => handleSelectedPet(pet.id)}
-                            className={selectedPets.includes(pet.id) ? 'selected' : ''}
+                            <li
+                                key={pet.id}
+                                onClick={() => handleSelectedPet(pet.id)}
+                                className={selectedPets.includes(pet.id) ? 'selected' : ''}
                             >
                                 <img src={pet.image_url} alt={pet.title} />
                                 <span>{pet.title}</span>

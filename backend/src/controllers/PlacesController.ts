@@ -1,23 +1,30 @@
-import { Request, Response} from 'express';
+import { Request, Response } from 'express';
 import knex from '../database/connection';
 
 class PlacesController {
     async index(request: Request, response: Response) {
         const { city, uf, pets } = request.query;
-        
+
         const parsedPets = String(pets)
-        .split(',')
-        .map(pet => Number(pet.trim()));
+            .split(',')
+            .map(pet => Number(pet.trim()));
 
         const places = await knex('places')
-        .join('place_pets', 'places.id', '=', 'place_pets.place_id')
-        .whereIn('place_pets.pet_id', parsedPets)
-        .where('city', String(city))
-        .where('uf', String(uf))
-        .distinct()
-        .select('places.*');
+            .join('place_pets', 'places.id', '=', 'place_pets.place_id')
+            .whereIn('place_pets.pet_id', parsedPets)
+            .where('city', String(city))
+            .where('uf', String(uf))
+            .distinct()
+            .select('places.*');
 
-        return response.json(places);
+        const serializedPlaces = places.map(place => {
+            return {
+                ...place,
+                image_url: `http://192.168.0.10:3333/uploads/${place.image}`,
+            };
+        });
+
+        return response.json(serializedPlaces);
     }
 
     async show(request: Request, response: Response) {
@@ -26,19 +33,23 @@ class PlacesController {
         const place = await knex('places').where('id', id).first();
 
         if (!place) {
-            return response.status(400).json({message: "Place not found"});
+            return response.status(400).json({ message: "Place not found" });
         }
 
-        const pets = await knex('pets')
-        .join('place_pets', 'pets.id', '=', 'place_pets.pet_id')
-        .where('place_pets.place_id', id)
-        .select('pets.title');
+        const serializedPlaces = {
+                ...place,
+                image_url: `http://192.168.0.10:3333/uploads/${place.image}`,
+            };
 
-        return response.json({ place, pets});
+        const pets = await knex('pets')
+            .join('place_pets', 'pets.id', '=', 'place_pets.pet_id')
+            .where('place_pets.place_id', id)
+            .select('pets.title');
+
+        return response.json({ place: serializedPlaces, pets });
     }
 
     async create(request: Request, response: Response) {
-
         const { //Desestruturação
             name,
             email,
@@ -53,7 +64,7 @@ class PlacesController {
         const trx = await knex.transaction();
 
         const place = { //Object Short Syntax
-            image: 'https://images.unsplash.com/photo-1584204180902-1aa5bc1aa4c1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+            image: request.file.filename,
             name,
             email,
             whatsapp,
@@ -67,12 +78,15 @@ class PlacesController {
 
         const place_id = insertedIds[0];
 
-        const placePets = pets.map((pet_id: number) => {
-            return {
-                pet_id,
-                place_id,
-            };
-        })
+        const placePets = pets
+            .split(',')
+            .map((pet: string) => Number(pet.trim()))
+            .map((pet_id: number) => {
+                return {
+                    pet_id,
+                    place_id,
+                };
+            })
 
         await trx('place_pets').insert(placePets);
 

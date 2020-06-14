@@ -18,6 +18,7 @@ interface Place {
     id: number;
     name: string;
     image: string;
+    image_url: string;
     latitude: number;
     longitude: number;
 }
@@ -131,7 +132,7 @@ const Places = () => {
                                     }}
                                 >
                                     <View style={styles.mapMarkerContainer}>
-                                        <Image style={styles.mapMarkerImage} source={{ uri: place.image }} />
+                                        <Image style={styles.mapMarkerImage} source={{ uri: place.image_url }} />
                                         <Text style={styles.mapMarkerTitle}>{place.name}</Text>
                                     </View>
                                 </Marker>

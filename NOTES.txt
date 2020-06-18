@@ -1,0 +1,150 @@
+#########################################################################
+-------------------------PREPARANDO-O-AMBIENTE---------------------------
+#########################################################################
+1. Instalação
+	1.1 Chocolatey (cmd)
+	1.2 Node.js (Ferramenta backend)
+
+1.3 Visual Studio Code
+	1.3.1 Dracula Theme (Ferramenta VSCode)
+	1.3.2 Material Icon Theme (Ferramenta VSCode)
+
+2. Usando o Node.js
+	2.1 npm init -y (Configuração Node.js)
+	2.2 npm install express (Instalando o Express)
+	2.3 new index.js (configuração da port:3333)
+
+4. Conhecendo o React
+	4.1 npx create-react-app frontend (Criando o projeto front end)
+	4.2 npm start (Testando o aplicativo)
+
+5. Conceito sobre React Native
+	5.1 JavaScript Core (Código único)
+
+6. Explicando o Expo
+	6.1 Ações da lib 
+	6.2 Utilização de JavaScript
+#########################################################################
+---------------------------ELABORANDO-O-BACKEND--------------------------
+#########################################################################
+1. Requisições com GET/POST
+	1.1 Métodos de Requisições (GET, POST, PUT, DELETE)
+	1.2 Instalação do Insomnia
+	1.3 Teste de rotas com o Insomnia
+
+2. Parâmetros
+	2.1 Queries Parms (Usados para paginação e filtros)
+	2.2 Route Parms (Usado para identificar recursos)
+	2.3 Request Body (Colhendo informações com JSON)
+
+3. Typescript-node-tool
+	3.1 npm install ts-node-dev
+	3.2 Reset automático do index.js (npm run dev)
+
+4. Banco de dados
+	4.1 Instalação o Knex e Sqlite3
+	4.2 npm install knex / npm install sqlite3 
+	4.3 knexfile (Setando os endereços)
+
+5. Análise de recursos 
+	5.1 Entidades 
+	5.2 Funcionalidades
+
+6. Criação de tabelas SQLite3
+	6.1 npx knex migrate:make create_(table_name) 
+	6.2 npx migrate:latest (Criação do BD)
+	6.3 npm knex:seed (Criando tabela pivot)
+
+7.Controladores (MVC)
+	7.1 PetsController.ts
+	7.2 PlacesController.ts
+	7.3 Métodos (Index, Show, Create, Update e Delete)
+#########################################################################
+----------------------------ELABORANDO-O-FRONTEND------------------------
+#########################################################################
+1. Organização do projeto
+	1.1 Limpeza do projeto (Apagando arquivos)
+	1.2 Estrutura de funcionamento do React (npm start)
+	1.2.1 (index.js --> App.js --> Header.js)
+
+2. Conceitos do React
+	2.1 Componente = função que retorna um html (JSX) 
+	2.2 Propriedades = conteúdo modificado atravès de injeção(js)
+	2.2.1 Desestruturação de propriedade (Código mais claro)
+	2.3 Estado modificado = Usando o {useState}
+
+3. Configurações de HTML, CSS e Emmet
+	3.1 index.js e style.css (por página)
+	3.2 global.css (imports, reset e default)
+	3.3 Atalhos com emmet (settings.json)
+
+4. Página Inicial
+	4.1 Elaboração do conteúdo da página
+	4.2 Import de imagens
+	4.3 Import de Icons (Feather Icons + React)
+	4.4 Estilização da página (Import)
+
+5. Configurações de rotas
+	5.1 npm react-router-dom (instalação)
+	5.2 Importação (BrowserRouter, Router)
+	5.3 Rota para página inicial (Imports)
+	5.4 Propriedade 'exact' para página inicial
+	5.5 Uso do 'Link' react para acelerar a página
+
+6. Página Cadastro de local
+	6.1 Elaboração do HTML
+	6.2 Estilização da página (Import)
+	6.3 Utilização de propriedades semânticas (Field/Legend)
+
+7. Conexão com API
+	7.1 npm install axios (npm start)
+	7.2 configuração das páginas (recepção de valores de cadastro)
+	7.3 configuração e utilização de async-await nas functions
+	7.4 Usando useState e useHistory
+	7.5 Preenchendo formulário dinamicamente (.map)
+	7.7 Criação de funções Handle~
+#########################################################################
+-------------------------PROJETO-NO-REACT-NATIVE-------------------------
+#########################################################################
+1. Instalação
+	1.1 npm install -g expo-cli
+	1.2 expo -h (verificando instalação)
+	1.3 expo init (nome_do_projeto)
+
+2. Execução do projeto
+	2.1 npm start (pasta mobile)
+	2.2 expo app (Android) - QRCode
+
+3. Comparação da estrutura do projeto com React
+	3.1 <view> / <text> (padrão)
+	3.2 style diferenciado {StyleSheet}
+	3.3 flexbox = display: flex (padrão)
+	3.4 Propriedades sem hífen: background-color = backgroundColor.
+	3.5 Herança de estilos: "Não existem no React Native"
+	3.6 Estilização própria para cada elemento
+
+4. Iniciação do projeto
+	4.1 Configuração de navegação (instalação do react-navigator)
+	4.2 Configuração de rotas
+
+5. Eloboração da página inicial
+	5.1 Aplicação de HTML ao Layout
+	5.2 Estilização da página
+	5.3 Utilização de libs para estilização de botões
+
+6. Elaboração da página de pesquisa
+	6.1 Aplicação de HTML ao Layout
+	6.2 Estilização da página
+	6.3 Configuração do map
+
+7. Elaboração da página de detalhes
+	7.1 Aplicação de HTML ao Layout
+	7.2 Estilização da página
+
+8. Conexão com Backend
+	8.1 Verificação de conexão e Banco de dados
+	8.2 Criação de funções que recebem os valores do DB.
+	8.4 configurando mensagem de e-mail e whatsapp
+	8.4 Configurando de E-mail (expo-mail-composer)
+	8.5 Configuração de Whatsapp (deep-Linking-react)
+#########################################################################

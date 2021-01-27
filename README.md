@@ -1,10 +1,10 @@
 <h1 align="center">
-  <img alt="BeTheHero" title="Bethehero" src="https://imgur.com/9K8GBca.png" />
+  :rocket: Projeto Pega Pets - Protótipo
 </h1>
 
-<h3 align="center">
-  :rocket: Projeto Pega Pets - Protótipo
-</h3>
+<h2 align="center">
+  <img alt="BeTheHero" title="Bethehero" src="https://imgur.com/9K8GBca.png" />
+</h2>
 
 ## :book:    Sobre o projeto
 <p>
